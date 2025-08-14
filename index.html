@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Most Viral Videos</title>
+    <style>
+        body {
+            background: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Esto centra verticalmente en la página */
+    min-height: 100vh;
+        }
+        .main-title {
+            margin: 40px 0 10px 0;
+            font-size: 2.2em;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            position: relative;
+        }
+        .fire-emoji {
+            font-size: 1.3em;
+            margin: 0 4px;
+            animation: fireGlow 1s infinite alternate;
+        }
+        @keyframes fireGlow {
+            0% { filter: drop-shadow(0 0 2px #ff9800); }
+            100% { filter: drop-shadow(0 0 16px #ff5722); }
+        }
+        .fire-jump {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2.2em;
+            z-index: 2;
+            animation: fireJump 1.2s infinite cubic-bezier(.5,0,.5,1);
+            pointer-events: none;
+            top: -48px;
+        }
+        @keyframes fireJump {
+            0%   { top: -48px; opacity: 0.7; }
+            30%  { top: -70px; opacity: 1; }
+            60%  { top: -48px; opacity: 0.7; }
+            100% { top: -48px; opacity: 0.7; }
+        }
+        .blue-btn-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+            width: 100%;
+        }
+        .blue-btn {
+            background: #007bff;
+            color: #fff;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 8px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            transition: background 0.2s;
+            position: relative;
+            z-index: 1;
+        }
+        .blue-btn:hover {
+            background: #0056b3;
+        }
+        .top-right-btn, .top-left-btn {
+            position: absolute;
+            top: 20px;
+            z-index: 10;
+        }
+        .top-right-btn {
+            right: 30px;
+        }
+        .top-left-btn {
+            left: 30px;
+        }
+        .small-red-btn {
+            background: #e53935;
+            color: #fff;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            transition: background 0.2s;
+        }
+        .small-red-btn:hover {
+            background: #b71c1c;
+        }
+        .small-telegram-btn {
+            background: #229ED9;
+            color: #fff;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            transition: background 0.2s;
+        }
+        .small-telegram-btn:hover {
+            background: #176ca7;
+        }
+        .video-section {
+            width: 100%;
+            max-width: 700px;
+            margin-bottom: 40px;
+            background: #111;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.7);
+            padding: 24px 16px 16px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+        .video-title {
+            font-size: 1.3em;
+            margin-bottom: 12px;
+            color: #ffd700;
+            text-align: center;
+        }
+        .ad-in-video {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(34,34,34,0.92);
+            color: #ffd700;
+            padding: 8px 18px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1em;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            z-index: 2;
+            pointer-events: auto;
+        }
+        .ad-in-video a {
+            color: #ffd700;
+            text-decoration: none;
+        }
+        video {
+            width: 100%;
+            max-width: 640px;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.7);
+            margin-bottom: 10px;
+            z-index: 1;
+        }
+        .crazy-eye {
+            position: absolute;
+            width: 44px;
+            height: 44px;
+            background: #fff;
+            border-radius: 50%;
+            border: 2px solid #222;
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+            animation: crazyEyeMove 2.2s infinite alternate cubic-bezier(.5,0,.5,1);
+        }
+        .crazy-eye.left {
+            top: 10px;
+            left: 10px;
+            animation-delay: 0s;
+        }
+        .crazy-eye.right {
+            top: 10px;
+            right: 10px;
+            animation-delay: 1.1s;
+        }
+        .crazy-pupil {
+            width: 18px;
+            height: 18px;
+            background: #222;
+            border-radius: 50%;
+            position: relative;
+            left: 0;
+            top: 0;
+            animation: crazyPupilMove 1.2s infinite alternate cubic-bezier(.5,0,.5,1);
+        }
+        .crazy-eye.right .crazy-pupil {
+            animation-delay: 0.6s;
+        }
+        @keyframes crazyEyeMove {
+            0% { transform: scale(1) rotate(0deg);}
+            50% { transform: scale(1.1) rotate(10deg);}
+            100% { transform: scale(1) rotate(-10deg);}
+        }
+        @keyframes crazyPupilMove {
+            0% { left: 2px; top: 2px; }
+            25% { left: 10px; top: 4px; }
+            50% { left: 8px; top: 12px; }
+            75% { left: 2px; top: 10px; }
+            100% { left: 2px; top: 2px; }
+        }
+        .bottom-btns {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 40px 0 20px 0;
+            gap: 18px;
+        }
+        .telegram-btn {
+            background: #229ED9;
+            color: #fff;
+            border: none;
+            padding: 14px 36px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            transition: background 0.2s;
+        }
+        .telegram-btn:hover {
+            background: #176ca7;
+        }
+        .red-btn {
+            background: #e53935;
+            color: #fff;
+            border: none;
+            padding: 16px 44px;
+            border-radius: 8px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .red-btn span.ad-text {
+            color: #ffd700;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+        .red-btn:hover {
+            background: #b71c1c;
+        }
+        @media (max-width: 800px) {
+            .video-section {
+                max-width: 98vw;
+                padding: 10px 2vw 10px 2vw;
+            }
+            video {
+                max-width: 98vw;
+            }
+            .top-right-btn, .top-left-btn {
+                top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <body>
+    <div class="top-right-btn">
+        <button class="small-red-btn" onclick="window.open('https://www.movingbotas.info/?sl=5980022-7fa4e&pub_click_id={External_ID_from_traffic_source}&site={subID}&pub_sub_id={sub_subID}', '_blank')">
+            More Videos
+        </button>
+    </div>
+    <div class="top-left-btn">
+        <a class="small-telegram-btn" href="https://t.me/+wauGQfzp3k1iM2Ix" target="_blank">
+            Telegram
+        </a>
+    </div>
+    <!-- Cada video-section ya está centrado y uno debajo del otro por el CSS de .container y .video-section -->
+<!-- Solo asegúrate de que todos los <div class="video-section"> estén dentro de <div class="container"> y no anidados entre sí -->
+
+ <div class="container">
+        <div class="main-title">
+            <span class="fire-emoji">🔥</span>
+            Most Viral Videos
+            <span class="fire-emoji">🔥</span>
+        </div>
+        <div class="blue-btn-wrapper">
+            <span class="fire-jump">🔥</span>
+            <button class="blue-btn">Most Viral Videos</button>
+        </div>
+
+    <!-- Video 1 -->
+    <div class="video-section" style="margin-top:30px;align-items:center;">
+        <div class="crazy-eye left"><div class="crazy-pupil"></div></div>
+        <div class="crazy-eye right"><div class="crazy-pupil"></div></div>
+        <div class="video-title">Mejor Mamada De Ruth Lee</div>
+        <div class="video-cover-wrap" style="position:relative;width:100%;max-width:640px;display:flex;justify-content:center;align-items:center;">
+            <a id="cover-link1"
+               href="#"
+               style="display:block;position:absolute;top:0;left:0;width:100%;height:100%;z-index:3;"
+               onclick="window.open('https://www.movingbotas.info/?sl=5980022-7fa4e&pub_click_id={External_ID_from_traffic_source}&site={subID}&pub_sub_id={sub_subID}', '_blank'); this.style.display='none'; return false;">
+                <img src="https://i.picasion.com/pic92/0bd4bd89cf50be92be8234ade984813f.gif"
+                     alt="Portada"
+                     style="width:100%;height:100%;object-fit:cover;display:block;border-radius:10px;max-width:640px;">
+            </a>
+            <video id="video1" controls poster="https://i.picasion.com/pic92/0bd4bd89cf50be92be8234ade984813f.gif"
+                   style="position:relative;z-index:2;width:100%;max-width:640px;border-radius:10px;display:block;margin:auto;">
+                <source src="video1.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </div>
+
+    <!-- Video 2 -->
+    <div class="video-section" style="align-items:center;">
+        <div class="video-title">Gracie Bon Anal </div>
+        <div class="video-cover-wrap" style="position:relative;width:100%;max-width:640px;display:flex;justify-content:center;align-items:center;">
+            <a id="cover-link2"
+               href="#"
+               style="display:block;position:absolute;top:0;left:0;width:100%;height:100%;z-index:3;"
+               onclick="window.open('https://www.posicaodominate.wiki/?sl=5980355-ce872&pub_click_id={External_ID_from_traffic_source}&site={subID}&pub_sub_id={sub_subID}', '_blank'); this.style.display='none'; return false;">
+                <img src="https://i.picasion.com/pic92/0e4c47eff4f522357608b799dfae0d3e.gif"
+                     alt="Portada"
+                     style="width:100%;height:100%;object-fit:cover;display:block;border-radius:10px;max-width:640px;">
+            </a>
+            <video id="video2" controls poster="https://i.picasion.com/pic92/0e4c47eff4f522357608b799dfae0d3e.gif"
+                   style="position:relative;z-index:2;width:100%;max-width:640px;border-radius:10px;display:block;margin:auto;">
+                <source src="video2.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </div>
+
+    <!-- Video 3 -->
+    <div class="video-section" style="align-items:center;">
+        <div class="video-title">Squirt Con Dildo </div>
+        <div class="video-cover-wrap" style="position:relative;width:100%;max-width:640px;display:flex;justify-content:center;align-items:center;">
+            <a id="cover-link3"
+               href="#"
+               style="display:block;position:absolute;top:0;left:0;width:100%;height:100%;z-index:3;"
+               onclick="window.open('https://www.underlingmistery.wiki/?sl=5980463-c642d&pub_click_id={External_ID_from_traffic_source}&site={subID}&pub_sub_id={sub_subID}', '_blank'); this.style.display='none'; return false;">
+                <img src="https://i.picasion.com/pic92/884418ea29d6742962d72ba147cc019c.gif"
+                     alt="Portada"
+                     style="width:100%;height:100%;object-fit:cover;display:block;border-radius:10px;max-width:640px;">
+            </a>
+            <video id="video3" controls poster="https://i.picasion.com/pic92/884418ea29d6742962d72ba147cc019c.gif"
+                   style="position:relative;z-index:2;width:100%;max-width:640px;border-radius:10px;display:block;margin:auto;">
+                <source src="video 3.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </div>
+
+    <!-- Video 4 -->
+    <div class="video-section" style="align-items:center;">
+        <div class="video-title">Morena Singando Duro </div>
+        <div class="video-cover-wrap" style="position:relative;width:100%;max-width:640px;display:flex;justify-content:center;align-items:center;">
+            <a id="cover-link4"
+               href="#"
+               style="display:block;position:absolute;top:0;left:0;width:100%;height:100%;z-index:3;"
+               onclick="window.open('https://www.underlingmistery.work/?sl=5979410-bb173&pub_click_id={External_ID_from_traffic_source}&site={subID}&pub_sub_id={sub_subID}', '_blank'); this.style.display='none'; return false;">
+                <img src="https://i.picasion.com/pic92/70b8ffc401ea0be70f6c690d81484759.gif"
+                     alt="Portada"
+                     style="width:100%;height:100%;object-fit:cover;display:block;border-radius:10px;max-width:640px;">
+            </a>
+            <video id="video4" controls poster="https://i.picasion.com/pic92/70b8ffc401ea0be70f6c690d81484759.gif"
+                   style="position:relative;z-index:2;width:100%;max-width:640px;border-radius:10px;display:block;margin:auto;">
+                <source src="video4.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </div>
+
+    <!-- Video 5 -->
+    <div class="video-section" style="align-items:center;">
+        <div class="video-title">2 Ricas Chicas </div>
+        <div class="video-cover-wrap" style="position:relative;width:100%;max-width:640px;display:flex;justify-content:center;align-items:center;">
+            <a id="cover-link5"
+               href="#"
+               style="display:block;position:absolute;top:0;left:0;width:100%;height:100%;z-index:3;"
+               onclick="window.open('https://www.passingcars.wiki/?sl=5980359-c0d21&pub_click_id={External_ID_from_traffic_source}&site={subID}&pub_sub_id={sub_subID}', '_blank'); this.style.display='none'; return false;">
+                <img src="https://i.picasion.com/pic92/8a9e81113ef5d48ca0237ae687e640ed.gif"
+                     alt="Portada"
+                     style="width:100%;height:100%;object-fit:cover;display:block;border-radius:10px;max-width:640px;">
+            </a>
+            <video id="video5" controls poster="https://i.picasion.com/pic92/8a9e81113ef5d48ca0237ae687e640ed.gif"
+                   style="position:relative;z-index:2;width:100%;max-width:640px;border-radius:10px;display:block;margin:auto;">
+                <source src="video 5.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </div>
+</div>
+        <div class="bottom-btns">
+            <a class="telegram-btn" href="https://t.me/+wauGQfzp3k1iM2Ix" target="_blank">
+                Join our Telegram Channel
+            </a>
+            <button class="red-btn" onclick="window.open(' https://www.movingbotas.info/?sl=5980022-7fa4e&pub_click_id={External_ID_from_traffic_source}&site={subID}&pub_sub_id={sub_subID}', '_blank')">
+                Click for more videos
+                <span class="ad-text">  New Videos!]</span>
+            </button>
+        </div>
+    </div>
+
+<div class="barbie-dance-slide">
+  <svg viewBox="0 0 120 220" width="90" height="165">
+    <!-- Pierna izquierda -->
+    <rect x="35" y="160" width="12" height="45" rx="6" fill="#ffe0b2" class="leg leg-left"/>
+    <!-- Pierna derecha -->
+    <rect x="73" y="160" width="12" height="45" rx="6" fill="#ffe0b2" class="leg leg-right"/>
+    <!-- Cuerpo -->
+    <rect x="45" y="90" width="30" height="70" rx="15" fill="#e53935"/>
+    <!-- Cabeza -->
+    <ellipse cx="60" cy="70" rx="22" ry="26" fill="#ffe0b2"/>
+    <!-- Cabello rubio -->
+    <ellipse cx="60" cy="60" rx="26" ry="18" fill="#ffe066"/>
+    <ellipse cx="80" cy="80" rx="10" ry="18" fill="#ffe066" transform="rotate(20 80 80)"/>
+    <!-- Brazo izquierdo -->
+    <rect x="18" y="100" width="12" height="50" rx="6" fill="#ffe0b2" class="arm arm-left"/>
+    <!-- Brazo derecho -->
+    <rect x="90" y="100" width="12" height="50" rx="6" fill="#ffe0b2" class="arm arm-right"/>
+    <!-- Falda roja -->
+    <ellipse cx="60" cy="160" rx="32" ry="18" fill="#f44336"/>
+    <!-- Cara simple -->
+    <ellipse cx="60" cy="75" rx="6" ry="3" fill="#fff"/>
+    <ellipse cx="54" cy="68" rx="2" ry="2" fill="#222"/>
+    <ellipse cx="66" cy="68" rx="2" ry="2" fill="#222"/>
+    <ellipse cx="60" cy="82" rx="4" ry="2" fill="#e57373"/>
+  </svg>
+</div>
+<style>
+.barbie-dance-slide {
+  position: fixed;
+  right: 10px;
+  top: -180px;
+  z-index: 30;
+  pointer-events: none;
+  animation: barbie-slide-down 3.5s cubic-bezier(.5,0,.5,1) forwards, barbie-bounce 1.2s 3.5s infinite alternate;
+}
+@keyframes barbie-slide-down {
+  0%   { top: -180px; }
+  100% { top: 40px; }
+}
+@keyframes barbie-bounce {
+  0%   { transform: translateY(0);}
+  50%  { transform: translateY(18px);}
+  100% { transform: translateY(0);}
+}
+.leg-left {
+  transform-origin: 41px 160px;
+  animation: leg-left-dance 1.2s infinite alternate;
+}
+.leg-right {
+  transform-origin: 79px 160px;
+  animation: leg-right-dance 1.2s infinite alternate;
+}
+@keyframes leg-left-dance {
+  0% { transform: rotate(0deg);}
+  50% { transform: rotate(-18deg);}
+  100% { transform: rotate(0deg);}
+}
+@keyframes leg-right-dance {
+  0% { transform: rotate(0deg);}
+  50% { transform: rotate(18deg);}
+  100% { transform: rotate(0deg);}
+}
+.arm-left {
+  transform-origin: 24px 100px;
+  animation: arm-left-dance 1.2s infinite alternate;
+}
+.arm-right {
+  transform-origin: 96px 100px;
+  animation: arm-right-dance 1.2s infinite alternate;
+}
+@keyframes arm-left-dance {
+  0% { transform: rotate(-10deg);}
+  50% { transform: rotate(-40deg);}
+  100% { transform: rotate(-10deg);}
+}
+@keyframes arm-right-dance {
+  0% { transform: rotate(10deg);}
+  50% { transform: rotate(40deg);}
+  100% { transform: rotate(10deg);}
+}
+</style>
+
+</body>
+</html>
+ 
